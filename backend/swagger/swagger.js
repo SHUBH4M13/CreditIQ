@@ -6,7 +6,7 @@ import swaggerUi from "swagger-ui-express";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const registerSwagger = (app, port) => {
+const registerSwagger = (app) => {
     const swaggerSpec = swaggerJsdoc({
         definition: {
             openapi: "3.0.3",
@@ -17,8 +17,8 @@ const registerSwagger = (app, port) => {
             },
             servers: [
                 {
-                    url: `http://localhost:${port}`,
-                    description: "Local development server"
+                    url: "/",
+                    description: "Current server"
                 }
             ]
         },

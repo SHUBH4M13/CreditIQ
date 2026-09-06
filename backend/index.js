@@ -1,15 +1,13 @@
 import express from "express";
-import connectDB from "./config/ConnectDB.js";
+import prisma from "./lib/prisma.js";
 import registerSwagger from "./swagger/swagger.js";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || 5001);
 
-// Middleware
 app.use(express.json());
-registerSwagger(app, PORT);
+registerSwagger(app);
 
-// Health check route
 app.get("/", (req, res) => {
     res.status(200).json({
         success: true,
@@ -17,12 +15,17 @@ app.get("/", (req, res) => {
     });
 });
 
-// Start server
 const startServer = async () => {
-    await connectDB();
+    try {
+        await prisma.$connect();
+        console.log("Prisma database connected");
+    } catch (error) {
+        console.error(`Prisma database connection failed: ${error.message}`);
+        console.error("The API is running, but database-dependent endpoints will be unavailable until MySQL is reachable.");
+    }
 
     app.listen(PORT, () => {
-        console.log(`CreditIQ Server running on port ${PORT}`);
+        console.log(`Server running on port ${PORT}`);
     });
 };
 
