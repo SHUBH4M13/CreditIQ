@@ -1,41 +1,39 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import swaggerJsdoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.0",
 
-const registerSwagger = (app) => {
-    const swaggerSpec = swaggerJsdoc({
-        definition: {
-            openapi: "3.0.3",
-            info: {
-                title: "CreditIQ API",
-                version: "1.0.0",
-                description: "Interactive API documentation for the CreditIQ backend."
-            },
-            servers: [
-                {
-                    url: "/",
-                    description: "Current server"
-                }
-            ]
+        info: {
+            title: "CreditIQ API",
+            version: "1.0.0",
+            description: "Backend API for CreditIQ"
         },
-        apis: [path.join(__dirname, "*.swagger.js")]
-    });
 
-    app.get("/api-docs.json", (req, res) => {
-        res.status(200).json(swaggerSpec);
-    });
+        servers: [
+            {
+                url: "http://localhost:5001",
+                description: "Local development server"
+            }
+        ],
 
-    app.use(
-        "/api-docs",
-        swaggerUi.serve,
-        swaggerUi.setup(swaggerSpec, {
-            customSiteTitle: "CreditIQ API Documentation"
-        })
-    );
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: "http",
+                    scheme: "bearer",
+                    bearerFormat: "JWT"
+                }
+            }
+        }
+    },
+
+    apis: [
+        "./routes/*.js",
+        "./swagger/*.js"
+    ]
 };
 
-export default registerSwagger;
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+export default swaggerSpec;
