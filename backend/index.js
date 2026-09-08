@@ -3,6 +3,7 @@ import prisma from "./lib/prisma.js";
 
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
+import cardRoutes from "./routes/cardRoutes.js"
 
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.js";
@@ -13,6 +14,7 @@ const PORT = Number(process.env.PORT || 5001);
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/cards", cardRoutes);
 
 app.use(
     "/api-docs",
