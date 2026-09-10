@@ -12,41 +12,64 @@ enum Role {
   ADMIN
 }
 
+enum Occupation {
+  SALARIED_PRIVATE
+  SALARIED_GOVERNMENT_PSU
+  SELF_EMPLOYED_PROFESSIONAL
+  SELF_EMPLOYED_BUSINESS
+  UNEMPLOYED
+  STUDENT
+  RETIRED_PENSIONER
+  NRI
+}
+
 model User {
-  id          BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  firstName   String   @db.VarChar(100)
-  lastName    String   @db.VarChar(100)
-  email       String   @unique @db.VarChar(255)
-  password    String   @db.VarChar(255)
-  phoneNumber String?  @db.VarChar(32)
-  role        Role     @default(USER)
-  createdAt   DateTime @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime @updatedAt @db.Timestamp(0)
+  id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  firstName        String            @db.VarChar(100)
+  lastName         String            @db.VarChar(100)
+  email            String            @unique @db.VarChar(255)
+  password         String            @db.VarChar(255)
+  phoneNumber      String?           @db.VarChar(32)
+  role             Role              @default(USER)
+  createdAt        DateTime          @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime          @updatedAt @db.Timestamp(0)
+
   financialProfile FinancialProfile?
 
   @@map("users")
 }
 
 model FinancialProfile {
+  id                     BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  userId                 BigInt            @unique @db.UnsignedBigInt
 
-  id                  BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  // Basic information
+  age                    Int?
+  income                 Decimal?          @db.Decimal(12, 2)
+  occupation             Occupation?
+  employmentTenureMonths Int?
 
-  userId              BigInt   @unique @db.UnsignedBigInt
-  age                 Int?
-  income              Decimal? @db.Decimal(12, 2)
-  occupation          String?  @db.VarChar(100)
-  employmentStatus    String?  @db.VarChar(50)
-  creditScore         Int?
-  existingLoans       Int?
-  existingCreditCards Int?
-  monthlySpending     Decimal? @db.Decimal(12, 2)
-  spendingCategories  Json?
-  preferredBenefits   Json?
+  // Credit profile
+  hasCreditHistory       Boolean?
+  creditScore            Int?
+  creditHistoryMonths    Int?
 
-  createdAt           DateTime @default(now()) @db.Timestamp(0)
-  updatedAt           DateTime @updatedAt @db.Timestamp(0)
+  // Existing debt
+  existingLoans          Int?
+  existingCreditCards    Int?
+  totalMonthlyEMI        Decimal?          @db.Decimal(12, 2)
 
-  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // Repayment behavior
+  latePayments           Int?
+  defaults               Int?
+
+  // Bank relationship
+  hasBankRelationship    Boolean?
+
+  createdAt              DateTime          @default(now()) @db.Timestamp(0)
+  updatedAt              DateTime          @updatedAt @db.Timestamp(0)
+
+    user                   User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("financial_profiles")
 }
