@@ -60,19 +60,25 @@ export const updateProfile = async (req, res) => {
         const userId = BigInt(req.user.userId);
 
         const {
+            // User fields
             firstName,
             lastName,
             phoneNumber,
+
+            // Financial profile fields
             age,
             income,
             occupation,
-            employmentStatus,
+            employmentTenureMonths,
+            hasCreditHistory,
             creditScore,
+            creditHistoryMonths,
             existingLoans,
             existingCreditCards,
-            monthlySpending,
-            spendingCategories,
-            preferredBenefits
+            totalMonthlyEMI,
+            latePayments,
+            defaults,
+            hasBankRelationship
         } = req.body;
 
         // Update basic user information
@@ -92,36 +98,45 @@ export const updateProfile = async (req, res) => {
             where: {
                 userId
             },
+
             update: {
                 age,
                 income,
                 occupation,
-                employmentStatus,
+                employmentTenureMonths,
+                hasCreditHistory,
                 creditScore,
+                creditHistoryMonths,
                 existingLoans,
                 existingCreditCards,
-                monthlySpending,
-                spendingCategories,
-                preferredBenefits
+                totalMonthlyEMI,
+                latePayments,
+                defaults,
+                hasBankRelationship
             },
+
             create: {
                 userId,
                 age,
                 income,
                 occupation,
-                employmentStatus,
+                employmentTenureMonths,
+                hasCreditHistory,
                 creditScore,
+                creditHistoryMonths,
                 existingLoans,
                 existingCreditCards,
-                monthlySpending,
-                spendingCategories,
-                preferredBenefits
+                totalMonthlyEMI,
+                latePayments,
+                defaults,
+                hasBankRelationship
             }
         });
 
         return res.status(200).json({
             success: true,
             message: "Profile updated successfully",
+
             user: {
                 id: updatedUser.id.toString(),
                 firstName: updatedUser.firstName,
@@ -130,6 +145,7 @@ export const updateProfile = async (req, res) => {
                 phoneNumber: updatedUser.phoneNumber,
                 role: updatedUser.role
             },
+
             financialProfile: {
                 ...financialProfile,
                 id: financialProfile.id.toString(),
