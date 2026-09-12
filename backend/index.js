@@ -4,6 +4,7 @@ import prisma from "./lib/prisma.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
 import cardRoutes from "./routes/cardRoutes.js"
+import recommendationRoutes from "./routes/recommendationRoutes.js"
 
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.js";
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cards", cardRoutes);
+app.use("/api/recommendations" , recommendationRoutes)
 
 app.use(
     "/api-docs",
