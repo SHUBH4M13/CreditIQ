@@ -24,3 +24,17 @@ def predict(data: dict):
     return {
         "approval_probability": round(probability * 100, 2)
     }
+
+@app.post("/predict/batch")
+def predict_batch(data: list[dict]):
+
+    input_data = pd.DataFrame(data)
+
+    probabilities = model.predict_proba(input_data)[:, 1]
+
+    return {
+        "approval_probabilities": [
+            round(probability * 100, 2)
+            for probability in probabilities
+        ]
+    }
