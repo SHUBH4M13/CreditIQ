@@ -23,6 +23,51 @@ enum Occupation {
   NRI
 }
 
+enum CardTier {
+  BASIC
+  STANDARD
+  PREMIUM
+  SUPER_PREMIUM
+  ULTRA_PREMIUM
+}
+
+enum CardType {
+  CASHBACK
+  REWARDS
+  TRAVEL
+  FUEL
+  LIFESTYLE
+  SHOPPING
+  DINING
+  PREMIUM
+  SUPER_PREMIUM
+  BUSINESS
+  STUDENT
+  SECURED
+  CO_BRANDED
+  FOREX
+  OTHER
+}
+
+enum Bank {
+  HDFC_BANK
+  ICICI_BANK
+  SBI_CARD
+  AXIS_BANK
+  KOTAK_MAHINDRA_BANK
+  INDUSIND_BANK
+  IDFC_FIRST_BANK
+  YES_BANK
+  AU_SMALL_FINANCE_BANK
+  RBL_BANK
+  HSBC
+  STANDARD_CHARTERED
+  AMERICAN_EXPRESS
+  FEDERAL_BANK
+  ONECARD
+  OTHER
+}
+
 model User {
   id               BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
   firstName        String            @db.VarChar(100)
@@ -78,20 +123,22 @@ model CreditCard {
   id                    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
 
   bank                  String   @db.VarChar(100)
-  cardName              String   @db.VarChar(150)
-  cardType              String   @db.VarChar(50)
+  cardName              Bank?
+  cardType              CardType?
 
   annualFee             Decimal? @db.Decimal(10, 2)
   joiningFee            Decimal? @db.Decimal(10, 2)
 
   rewards               String?  @db.Text
   cashback              String?  @db.Text
-
   loungeAccess          String?  @db.Text
   forexCharges          Decimal? @db.Decimal(5, 2)
 
   minimumIncome         Decimal? @db.Decimal(12, 2)
   minimumCreditScore    Int?
+
+  eligibilityScore      Int?
+  cardTier              CardTier?
 
   benefits              Json?
 
@@ -102,5 +149,6 @@ model CreditCard {
   updatedAt             DateTime @updatedAt @db.Timestamp(0)
 
   @@unique([bank, cardName])
+
   @@map("credit_cards")
 }
