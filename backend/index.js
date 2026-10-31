@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
 import cardRoutes from "./routes/cardRoutes.js"
 import recommendationRoutes from "./routes/recommendationRoutes.js"
+import improvementRoutes from "./routes/improvementRoutes.js";
 
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger/swagger.js";
@@ -17,6 +18,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/cards", cardRoutes);
 app.use("/api/recommendations" , recommendationRoutes)
+
+app.use(
+    "/api/improvements",
+    improvementRoutes
+);
 
 app.use(
     "/api-docs",

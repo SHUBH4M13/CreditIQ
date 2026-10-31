@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import joblib
 import pandas as pd
+from embedding import generate_embedding, generate_embeddings
 
 app = FastAPI()
 
@@ -37,4 +38,23 @@ def predict_batch(data: list[dict]):
             round(probability * 100, 2)
             for probability in probabilities
         ]
+    }
+
+@app.post("/embed")
+def embed(data: dict):
+    text = data["text"]
+
+    embedding = generate_embedding(text)
+
+    return {
+        "embedding": embedding
+    }
+
+
+@app.post("/embed/batch")
+def embed_batch(data: list[str]):
+    embeddings = generate_embeddings(data)
+
+    return {
+        "embeddings": embeddings
     }
