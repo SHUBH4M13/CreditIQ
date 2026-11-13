@@ -1,9 +1,18 @@
 from fastapi import FastAPI
 import joblib
 import pandas as pd
+
 from embedding import generate_embedding, generate_embeddings
+from pydantic import BaseModel
+from rag_service import generate_chat_response
 
 app = FastAPI()
+
+class ChatRequest(BaseModel):
+    card_id: str
+    card_name: str
+    bank: str
+    message: str
 
 model = joblib.load("creditiq_model.pkl")
 
@@ -57,4 +66,20 @@ def embed_batch(data: list[str]):
 
     return {
         "embeddings": embeddings
+    }
+
+@app.post("/chat")
+def chat(data: ChatRequest):
+
+    answer = generate_chat_response(
+        message=data.message,
+        card_id=data.card_id,
+        card_name=data.card_name,
+        bank=data.bank
+    )
+
+    return {
+        "success": True,
+        "card_id": data.card_id,
+        "answer": answer
     }

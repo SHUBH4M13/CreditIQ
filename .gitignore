@@ -1,4 +1,5 @@
 backend/.env
+CreditIQ_ML/.env
 backend/node_modules
 
 *.pkl
