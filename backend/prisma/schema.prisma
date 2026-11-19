@@ -122,8 +122,8 @@ model FinancialProfile {
 model CreditCard {
   id                    BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
 
-  bank                  String   @db.VarChar(100)
-  cardName              Bank?
+  bank                  Bank?
+  cardName              String   @db.VarChar(100)
   cardType              CardType?
 
   annualFee             Decimal? @db.Decimal(10, 2)

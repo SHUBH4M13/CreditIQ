@@ -5,6 +5,7 @@ import pandas as pd
 from embedding import generate_embedding, generate_embeddings
 from pydantic import BaseModel
 from rag_service import generate_chat_response
+from guardrails.prompt_guardrails import check_prompt_injection
 
 app = FastAPI()
 
@@ -71,6 +72,14 @@ def embed_batch(data: list[str]):
 @app.post("/chat")
 def chat(data: ChatRequest):
 
+     # Check for prompt injection
+    if not check_prompt_injection(data.message):
+        return {
+            "success": False,
+            "message": "Your message contains an instruction that cannot be processed."
+        }
+
+
     answer = generate_chat_response(
         message=data.message,
         card_id=data.card_id,
@@ -83,3 +92,5 @@ def chat(data: ChatRequest):
         "card_id": data.card_id,
         "answer": answer
     }
+    
+##uvicorn app:app --reload --host 0.0.0.0 --port 8000
